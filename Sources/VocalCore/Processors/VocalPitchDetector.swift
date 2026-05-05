@@ -54,7 +54,7 @@ public final class VocalPitchDetector {
     ///   - sampleRate: Taxa de amostragem em Hz
     ///   - expectedRange: Faixa esperada para correção de sub-harmônicos
     /// - Returns: `PitchResult` com nota e desvio, ou `nil` se não detectado
-     func detect(
+     public func detect(
         buffer: [Float],
         sampleRate: Float,
         expectedRange: ClosedRange<Float>? = nil

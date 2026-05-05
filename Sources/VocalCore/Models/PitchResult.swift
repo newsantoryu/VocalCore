@@ -5,7 +5,7 @@
 //  Created by victor almeida on 05/05/26.
 //
 
-struct PitchResult {
+public struct PitchResult {
 
     /// Frequência fundamental detectada em Hz
     let frequency: Float

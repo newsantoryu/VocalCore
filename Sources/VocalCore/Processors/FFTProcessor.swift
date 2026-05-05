@@ -16,7 +16,7 @@ import Foundation
 // MARK: - Windowing
 // ─────────────────────────────────────────────────────────────────────────────
 
-struct Windowing {
+public struct Windowing {
 
     static func applyHann(to buffer: inout [Float]) {
         var window = [Float](repeating: 0, count: buffer.count)
@@ -29,14 +29,14 @@ struct Windowing {
 // MARK: - FFTProcessor
 // ─────────────────────────────────────────────────────────────────────────────
 
-final class FFTProcessor {
+public final class FFTProcessor {
 
     private let fftSetup: FFTSetup
     private let log2n: vDSP_Length
-    private let fftSize: Int
-    private let halfSize: Int
+    public let fftSize: Int
+    public let halfSize: Int
 
-    init(size: Int) {
+    public init(size: Int) {
         self.fftSize  = size
         self.halfSize = size / 2
         self.log2n    = vDSP_Length(log2(Float(size)))
@@ -69,7 +69,7 @@ final class FFTProcessor {
 // MARK: - HarmonicProductSpectrum
 // ─────────────────────────────────────────────────────────────────────────────
 
-struct HarmonicProductSpectrum {
+public struct HarmonicProductSpectrum {
 
     static func apply(to magnitudes: [Float], harmonics: Int = 4) -> [Float] {
         var hps = magnitudes
@@ -96,13 +96,13 @@ struct HarmonicProductSpectrum {
 /// Nova faixa (80–1100 Hz) cobre:
 ///   - Baixo profundo: ~80 Hz
 ///   - Soprano agudo:  ~1050 Hz
-final class FrequencyEstimator {
+public final class FrequencyEstimator {
 
     // ✅ CORRIGIDO: era 120–400 Hz — não cobria vozes femininas agudas
-    private let minFrequency: Float = 80
-    private let maxFrequency: Float = 1100
+    public let minFrequency: Float = 80
+    public let maxFrequency: Float = 1100
 
-    func estimate(magnitudes: [Float], fftSize: Int, sampleRate: Float) -> Float? {
+   public func estimate(magnitudes: [Float], fftSize: Int, sampleRate: Float) -> Float? {
 
         guard !magnitudes.isEmpty else { return nil }
 
@@ -131,9 +131,9 @@ final class FrequencyEstimator {
 // MARK: - MusicTheory
 // ─────────────────────────────────────────────────────────────────────────────
 
-struct MusicTheory {
+public struct MusicTheory {
 
-    private static let noteNames = [
+    public static let noteNames = [
         "C", "C#", "D", "D#",
         "E", "F", "F#",
         "G", "G#", "A",
@@ -161,7 +161,7 @@ struct MusicTheory {
 
     /// Retorna apenas o nome da nota sem oitava (ex: "C#" de "C#3").
     /// Usado no alinhamento por grau melódico para comparar vozes em oitavas diferentes.
-    static func pitchClass(from noteName: String) -> String {
+    public static func pitchClass(from noteName: String) -> String {
         // Remove dígitos e sinal negativo da oitava — mantém só a nota (ex: "C#", "A")
         return noteName.components(separatedBy: CharacterSet.decimalDigits.union(CharacterSet(charactersIn: "-"))).first ?? noteName
     }

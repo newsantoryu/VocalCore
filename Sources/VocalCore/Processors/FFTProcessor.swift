@@ -140,7 +140,7 @@ public struct MusicTheory {
         "A#", "B"
     ]
 
-    static func analyze(frequency: Float) -> PitchResult? {
+    public static func analyze(frequency: Float) -> PitchResult? {
         guard frequency > 0 else { return nil }
 
         let midi        = 69 + 12 * log2(frequency / 440)

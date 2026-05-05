@@ -8,27 +8,27 @@
 import Accelerate
 import Foundation
 
-final class VocalPitchDetector {
+public final class VocalPitchDetector {
 
     // MARK: - Dependências
 
     /// Detector YIN — primário, alta precisão
-    private let yin: YINDetector
+    public let yin: YINDetector
 
     /// FFT para fallback e validação cruzada
-    private let fftSize = 4096
+    public  let fftSize = 4096
     private let fftProcessor: FFTProcessor
     private let estimator: FrequencyEstimator
 
     // MARK: - Configuração
 
     /// Diferença máxima em cents entre YIN e FFT para aceitar YIN como válido.
-    /// Se divergirem mais que isso, usa FFT (mais conservador).
-    private let maxCrossValidationCents: Float = 50
+    public let maxCrossValidationCents: Float = 50
 
     // MARK: - Init
+    /// Se divergirem mais que isso, usa FFT (mais conservador).
 
-    init() {
+    public init() {
         self.yin = YINDetector(
             bufferSize: 4096,
             threshold: 0.12,
@@ -54,7 +54,7 @@ final class VocalPitchDetector {
     ///   - sampleRate: Taxa de amostragem em Hz
     ///   - expectedRange: Faixa esperada para correção de sub-harmônicos
     /// - Returns: `PitchResult` com nota e desvio, ou `nil` se não detectado
-    func detect(
+     func detect(
         buffer: [Float],
         sampleRate: Float,
         expectedRange: ClosedRange<Float>? = nil

@@ -1,4 +1,19 @@
-//
+///// YIN-based pitch detection algorithm.
+///
+/// This detector estimates the fundamental frequency of a mono audio signal.
+///
+/// - Requirements:
+///   - Input must be mono PCM (Float)
+///   - Samples should be normalized between -1.0 and 1.0
+///   - Buffer size should be at least 2048 samples
+///
+/// - Behavior:
+///   - Returns nil for silence or low-confidence signals
+///   - More accurate with harmonic-rich signals (e.g. voice, instruments)
+///
+/// - Performance:
+///   - Designed for real-time usage
+///   - Avoid using very small buffers (<1024)
 //  VocalPitchDetector.swift
 //  VocalCore
 //
@@ -28,6 +43,9 @@ public final class VocalPitchDetector {
     // MARK: - Init
     /// Se divergirem mais que isso, usa FFT (mais conservador).
 
+/* let minFreq: Float = 50
+let maxFreq: Float = 1000
+*/
     public init() {
         self.yin = YINDetector(
             bufferSize: 4096,
@@ -39,30 +57,32 @@ public final class VocalPitchDetector {
         self.estimator = FrequencyEstimator()
     }
 
-    // MARK: - API Pública (mantém assinatura original)
-
-    /// Detecta a frequência fundamental de um buffer de amostras PCM.
-    ///
-    /// Estratégia híbrida:
-    /// 1. Tenta YIN — mais preciso (< 1 cent de erro típico)
-    /// 2. Se YIN falhar, usa FFT+HPS como fallback
-    /// 3. Se ambos detectarem, valida por cross-validation em cents
-    /// 4. Aplica correção de oitava se `expectedRange` fornecido
-    ///
-    /// - Parameters:
-    ///   - buffer: Amostras PCM Float normalizadas em [-1, 1]
-    ///   - sampleRate: Taxa de amostragem em Hz
-    ///   - expectedRange: Faixa esperada para correção de sub-harmônicos
-    /// - Returns: `PitchResult` com nota e desvio, ou `nil` se não detectado
+  /// 
+  /// Detects pitch from an audio buffer.
+///
+/// - Parameters:
+///   - buffer: Audio samples (mono)
+///   - sampleRate: Sampling rate (e.g. 44100 Hz)
+///
+/// - Returns:
+///   - Frequency in Hz if detected
+///   - Nil if detection fails or confidence is low
+/// 
      public func detect(
         buffer: [Float],
         sampleRate: Float,
         expectedRange: ClosedRange<Float>? = nil
     ) -> PitchResult? {
+        guard buffer.count >= fftSize else {
+    return nil
+}
+
+guard sampleRate > 0 else {
+    return nil
+}
 
         // --- Caminho 1: YIN (primário) ---
         let yinFrequency = yin.detect(buffer: buffer, sampleRate: sampleRate)
-
         // --- Caminho 2: FFT+HPS (fallback / validação) ---
         let fftFrequency = detectViaFFT(buffer: buffer, sampleRate: sampleRate)
 

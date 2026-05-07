@@ -15,9 +15,7 @@ public final class YINDetector {
     /// Tamanho da janela de análise — maior = mais preciso em graves, mais lento
     public let bufferSize: Int
 
-    /// Limiar de confiança do YIN — valores entre 0.10 e 0.15 são recomendados.
-    /// Menor = mais restritivo (menos falsos positivos, mais "nil").
-    /// Maior = mais permissivo (mais detecções, possíveis erros de oitava).
+/// Threshold for CMNDF (lower = stricter detection)
     public let threshold: Float
 
     /// Faixa de frequências válidas para busca (Hz)
